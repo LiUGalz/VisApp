@@ -341,6 +341,7 @@ function updatePositions() {
   drawEdges();
 }
 
+//kommentera vidare
 /**
  * Task 4: Verlet update function
  */

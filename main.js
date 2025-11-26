@@ -20,12 +20,14 @@ let structuralK = 20; //we need to be able to change the value
 const structuralDamping = 0.1; // damper
 
 const shearRestLength = structuralRestLength * Math.sqrt(2); // Rest length of diagonal (shear) springs ℓ₀ = √2 (Task 3–5)
-const shearK = 7; // Stiffness coefficient for diagonal (shear) springs (Task 3–5)
-const shearDamping = 0.05; // Damping coefficient for diagonal (shear) springs (Task 3–5)
+// const shearK = 7; // Stiffness coefficient for diagonal (shear) springs 
+let shearK = 7;   //  must be able to change the value so therefore "let"
 
-const mass = 0.2; // Mass of each particle, used in Newton's second law F = m·a (Task 1–5)
+const shearDamping = 0.05; // Damping coefficient for diagonal (shear) springs 
 
-let positions = []; // Stores the positions (x, y) of all particles (Task 1–5)
+const mass = 0.2; // Mass of each particle, used in Newton's second law F = m·a 
+
+let positions = []; // Stores the positions (x, y) of all particles 
 let velocities = []; // Stores the velocities of all particles, required for Euler integration (Task 1–3)
 let forces = []; // Stores the total force acting on each particle before computing acceleration (Task 1–5)
 let isRunning = false; // Controls whether the simulation is currently running or paused (Task 1–5, UI control)
@@ -341,7 +343,7 @@ function updatePositions() {
   drawEdges();
 }
 
-//kommentera vidare
+
 /**
  * Task 4: Verlet update function
  */
@@ -443,6 +445,12 @@ document.getElementById("structural-k").addEventListener("input", (e) => {
   structuralK = parseFloat(e.target.value); // Update stiffness in real time
   document.getElementById("structural-k-value").textContent =
     structuralK.toFixed(2); // Update UI number
+});
+
+document.getElementById("shear-k").addEventListener("input", (e) => {
+  shearK = parseFloat(e.target.value);   // Update diagonal stiffness live
+  document.getElementById("shear-k-value").textContent =
+    shearK.toFixed(1);                   // Update UI text
 });
 
 

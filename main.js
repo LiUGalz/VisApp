@@ -25,7 +25,9 @@ let shearK = 7;   //  must be able to change the value so therefore "let"
 
 const shearDamping = 0.05; // Damping coefficient for diagonal (shear) springs 
 
-const mass = 0.2; // Mass of each particle, used in Newton's second law F = m·a 
+//const mass = 0.2; // Mass of each particle, used in Newton's second law F = m·a 
+let mass = 0.2; //  Now adjustable via slider
+
 
 let positions = []; // Stores the positions (x, y) of all particles 
 let velocities = []; // Stores the velocities of all particles, required for Euler integration (Task 1–3)
@@ -451,6 +453,12 @@ document.getElementById("shear-k").addEventListener("input", (e) => {
   shearK = parseFloat(e.target.value);   // Update diagonal stiffness live
   document.getElementById("shear-k-value").textContent =
     shearK.toFixed(1);                   // Update UI text
+});
+
+document.getElementById("mass-slider").addEventListener("input", (e) => {
+  mass = parseFloat(e.target.value); // Update mass in real time
+  document.getElementById("mass-value").textContent =
+    mass.toFixed(2);                 // Update displayed number
 });
 
 

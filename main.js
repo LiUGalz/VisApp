@@ -133,22 +133,31 @@ function drawNodes() {
 
 const drag = d3
   .drag()
-  .on("start", function () {
-    isRunning = false;
-    // Stops the simulation while dragging for stability (Task 1–5)
+  .on("start", function (event, d) {
+    // No stopping of the simulation — it continues while dragging ✅
   })
+
   .on("drag", function (event, d) {
     d[0] = event.x;
-    // Updates the x-position of the dragged node
-
     d[1] = event.y;
-    // Updates the y-position of the dragged node
+    // Directly update the position of the dragged node
+
+    // IMPORTANT: Reset velocity so the node does not "explode" after release
+    d[0] = Math.max(padding, Math.min(width - padding, d[0]));
+    d[1] = Math.max(padding, Math.min(height - padding, d[1]));
+
+    // If using Verlet, we must also update prevPositions
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        if (positions[i][j] === d) {
+          prevPositions[i][j][0] = d[0];
+          prevPositions[i][j][1] = d[1];
+        }
+      }
+    }
 
     drawNodes();
-    // Redraws nodes so the dragged node moves visually
-
     drawEdges();
-    // Redraws edges so springs follow the node
   });
 
 /**

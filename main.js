@@ -15,7 +15,8 @@ const padding = 50; // Margin from the SVG edges so the grid is not drawn direct
 
 // Physical parameters:
 const structuralRestLength = 50; // pixel equivalent of ℓ0 = 1 m
-const structuralK = 20; // stiffness
+//const structuralK = 20; // stiffness before
+let structuralK = 20; //we need to be able to change the value
 const structuralDamping = 0.1; // damper
 
 const shearRestLength = structuralRestLength * Math.sqrt(2); // Rest length of diagonal (shear) springs ℓ₀ = √2 (Task 3–5)
@@ -134,7 +135,7 @@ function drawNodes() {
 const drag = d3
   .drag()
   .on("start", function (event, d) {
-    // No stopping of the simulation — it continues while dragging ✅
+    // No stopping of the simulation
   })
 
   .on("drag", function (event, d) {
@@ -234,16 +235,30 @@ function applySpring(i1, j1, i2, j2, L0, k, b) {
   const dirX = dx / dist;
   const dirY = dy / dist;
 
-  // Calculate the spring force
-  const springFx = k * (dist - L0) * dirX;
-  const springFy = k * (dist - L0) * dirY;
+  //--------------------------------------
+  // Calculate the spring force (not global)
+  //const springFx = k * (dist - L0) * dirX; (old)
+  //const springFy = k * (dist - L0) * dirY; (old)
+
+  // Calculate the spring force with restoring force multiplier (global)
+  const springFx = k * restoreForce * (dist - L0) * dirX;
+  const springFy = k * restoreForce * (dist - L0) * dirY;
+  //---------------------------------
 
   // Part 2: Damping forces
   const relVelX = v2[0] - v1[0]; // Relative velocity vp - vq (x)
   const relVelY = v2[1] - v1[1]; // vp - vq (y)
   const relVelDotUnit = relVelX * dirX + relVelY * dirY; // Scalar projection
-  const dampingFx = b * relVelDotUnit * dirX;
-  const dampingFy = b * relVelDotUnit * dirY;
+
+  // ------------------------------
+  // damping (not global)
+  // const dampingFx = b * relVelDotUnit * dirX;
+  // const dampingFy = b * relVelDotUnit * dirY;
+
+  // Global damping is now applied as a multiplier (global)
+  const dampingFx = b * damping * relVelDotUnit * dirX;
+  const dampingFy = b * damping * relVelDotUnit * dirY;
+  //---------------------------------
 
   // Total Force
   const Fx = springFx + dampingFx;
@@ -422,6 +437,13 @@ document.getElementById("damping").addEventListener("input", (e) => {
   damping = parseFloat(e.target.value);
   document.getElementById("damping-value").textContent = damping.toFixed(2);
 });
+
+document.getElementById("structural-k").addEventListener("input", (e) => {
+  structuralK = parseFloat(e.target.value); // Update stiffness in real time
+  document.getElementById("structural-k-value").textContent =
+    structuralK.toFixed(2); // Update UI number
+});
+
 
 // Simulation resets whenever the user selects a task.
 document

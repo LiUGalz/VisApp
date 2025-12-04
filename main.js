@@ -338,6 +338,11 @@ function updatePositions() {
       velocities[i][j][1] += forces[i][j][1] * timeStep;
       positions[i][j][0] += velocities[i][j][0] * timeStep;
       positions[i][j][1] += velocities[i][j][1] * timeStep;
+
+      // Theese two codelines makes it so the simulation will not goo outside its borders
+      positions[i][j][0] = Math.max(padding, Math.min(width - padding, positions[i][j][0]));
+      positions[i][j][1] = Math.max(padding, Math.min(height - padding, positions[i][j][1]));
+
     }
   }
 
